@@ -1,0 +1,1821 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Giro Vendas CRM — CRM Automotivo para Lojas de Veículos</title>
+  <meta name="description" content="CRM automotivo 100% pronto para usar. Automações de leads, integração com Marketplaces e distribuição automática para seus consultores.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --color-primary: #1A9FD4;
+      --color-primary-dark: #1580AC;
+      --color-primary-light: #E8F6FC;
+      --color-black: #0A0A0A;
+      --color-body: #333333;
+      --color-muted: #6B7280;
+      --color-white: #FFFFFF;
+      --color-bg-alt: #F5F7FA;
+      --color-border: #E5E7EB;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+      --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
+      --shadow-lg: 0 8px 32px rgba(0,0,0,0.1);
+      --radius: 12px;
+      --radius-sm: 8px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--color-body);
+      background: var(--color-white);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── UTILITY ── */
+    .container {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .section {
+      padding: 96px 0;
+    }
+
+    .section--alt {
+      background: var(--color-bg-alt);
+    }
+
+    .section-label {
+      display: inline-block;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--color-primary);
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-size: clamp(28px, 4vw, 40px);
+      font-weight: 800;
+      color: var(--color-black);
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+
+    .section-subtitle {
+      font-size: 18px;
+      color: var(--color-muted);
+      max-width: 600px;
+      line-height: 1.6;
+    }
+
+    .text-center { text-align: center; }
+    .mx-auto { margin-left: auto; margin-right: auto; }
+
+    /* ── BUTTONS ── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 32px;
+      border-radius: 50px;
+      font-size: 16px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.25s ease;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn--primary {
+      background: var(--color-primary);
+      color: var(--color-white);
+      box-shadow: 0 4px 16px rgba(26, 159, 212, 0.35);
+    }
+
+    .btn--primary:hover {
+      background: var(--color-primary-dark);
+      box-shadow: 0 6px 24px rgba(26, 159, 212, 0.45);
+      transform: translateY(-2px);
+    }
+
+    .btn--outline {
+      background: transparent;
+      color: var(--color-primary);
+      border: 2px solid var(--color-primary);
+    }
+
+    .btn--outline:hover {
+      background: var(--color-primary);
+      color: var(--color-white);
+    }
+
+    .btn--large {
+      padding: 20px 40px;
+      font-size: 18px;
+    }
+
+    .btn svg {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+
+    .btn--large svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    /* ── NAVBAR ── */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--color-border);
+      transition: box-shadow 0.3s ease;
+    }
+
+    .navbar.scrolled {
+      box-shadow: var(--shadow-sm);
+    }
+
+    .navbar__inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 72px;
+    }
+
+    .navbar__brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .navbar__logo {
+      width: 40px;
+      height: 40px;
+      background: var(--color-primary);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 900;
+      font-size: 18px;
+    }
+
+    .navbar__name {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--color-black);
+    }
+
+    .navbar__name span {
+      color: var(--color-primary);
+    }
+
+    .navbar__links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .navbar__links a {
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-muted);
+      transition: color 0.2s;
+    }
+
+    .navbar__links a:hover {
+      color: var(--color-primary);
+    }
+
+    .navbar__cta {
+      padding: 10px 24px !important;
+      font-size: 14px !important;
+    }
+
+    .navbar__toggle {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+    }
+
+    .navbar__toggle svg {
+      width: 28px;
+      height: 28px;
+      color: var(--color-black);
+    }
+
+    /* ── HERO ── */
+    .hero {
+      padding-top: 160px;
+      padding-bottom: 100px;
+      background: linear-gradient(170deg, var(--color-white) 0%, var(--color-bg-alt) 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -200px;
+      right: -200px;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(26,159,212,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -100px;
+      left: -100px;
+      width: 400px;
+      height: 400px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(26,159,212,0.04) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero__grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: center;
+    }
+
+    .hero__badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--color-primary-light);
+      color: var(--color-primary);
+      padding: 8px 16px;
+      border-radius: 50px;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 24px;
+    }
+
+    .hero__badge svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .hero__title {
+      font-size: clamp(36px, 5vw, 54px);
+      font-weight: 900;
+      color: var(--color-black);
+      line-height: 1.1;
+      margin-bottom: 20px;
+    }
+
+    .hero__title span {
+      color: var(--color-primary);
+    }
+
+    .hero__subtitle {
+      font-size: 19px;
+      color: var(--color-muted);
+      line-height: 1.7;
+      margin-bottom: 36px;
+      max-width: 500px;
+    }
+
+    .hero__actions {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .hero__proof {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 32px;
+      padding-top: 32px;
+      border-top: 1px solid var(--color-border);
+    }
+
+    .hero__proof-avatars {
+      display: flex;
+    }
+
+    .hero__proof-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 2px solid white;
+      margin-left: -8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 700;
+      color: white;
+    }
+
+    .hero__proof-avatar:first-child { margin-left: 0; }
+    .hero__proof-avatar:nth-child(1) { background: #1A9FD4; }
+    .hero__proof-avatar:nth-child(2) { background: #34D399; }
+    .hero__proof-avatar:nth-child(3) { background: #F59E0B; }
+    .hero__proof-avatar:nth-child(4) { background: #8B5CF6; }
+
+    .hero__proof-text {
+      font-size: 14px;
+      color: var(--color-muted);
+    }
+
+    .hero__proof-text strong {
+      color: var(--color-black);
+    }
+
+    /* Dashboard Mockup */
+    .hero__visual {
+      position: relative;
+    }
+
+    .dashboard-mockup {
+      background: var(--color-white);
+      border-radius: 16px;
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+      border: 1px solid var(--color-border);
+    }
+
+    .dashboard-mockup__bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 20px;
+      background: var(--color-bg-alt);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .dashboard-mockup__dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .dashboard-mockup__dot--red { background: #EF4444; }
+    .dashboard-mockup__dot--yellow { background: #F59E0B; }
+    .dashboard-mockup__dot--green { background: #22C55E; }
+
+    .dashboard-mockup__body {
+      padding: 24px;
+    }
+
+    .dashboard-mockup__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .dashboard-mockup__title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--color-black);
+    }
+
+    .dashboard-mockup__badge {
+      font-size: 11px;
+      font-weight: 600;
+      background: #DCFCE7;
+      color: #16A34A;
+      padding: 4px 10px;
+      border-radius: 50px;
+    }
+
+    .dashboard-mockup__pipeline {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    .pipeline-col__title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--color-muted);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .pipeline-col__count {
+      background: var(--color-bg-alt);
+      padding: 2px 8px;
+      border-radius: 50px;
+      font-size: 10px;
+    }
+
+    .pipeline-card {
+      background: var(--color-bg-alt);
+      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 8px;
+      border-left: 3px solid transparent;
+    }
+
+    .pipeline-card:nth-child(2) { border-left-color: var(--color-primary); }
+    .pipeline-card:nth-child(3) { border-left-color: #F59E0B; }
+    .pipeline-card:nth-child(4) { border-left-color: #22C55E; }
+
+    .pipeline-card__name {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--color-black);
+    }
+
+    .pipeline-card__vehicle {
+      font-size: 10px;
+      color: var(--color-muted);
+      margin-top: 2px;
+    }
+
+    .pipeline-card__tag {
+      font-size: 9px;
+      font-weight: 600;
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 4px;
+      margin-top: 4px;
+    }
+
+    .pipeline-card__tag--olx { background: #FEF3C7; color: #92400E; }
+    .pipeline-card__tag--wm { background: #DBEAFE; color: #1E40AF; }
+    .pipeline-card__tag--np { background: #E0E7FF; color: #3730A3; }
+    .pipeline-card__tag--site { background: #F3E8FF; color: #6B21A8; }
+
+    .hero__floating-badge {
+      position: absolute;
+      background: white;
+      border-radius: 12px;
+      padding: 12px 16px;
+      box-shadow: var(--shadow-md);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    .hero__floating-badge--top {
+      top: -10px;
+      right: -10px;
+    }
+
+    .hero__floating-badge--bottom {
+      bottom: 20px;
+      left: -20px;
+      animation-delay: 1.5s;
+    }
+
+    .hero__floating-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hero__floating-icon--green { background: #DCFCE7; color: #16A34A; }
+    .hero__floating-icon--blue { background: #DBEAFE; color: #2563EB; }
+
+    .hero__floating-icon svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .hero__floating-text {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--color-black);
+    }
+
+    .hero__floating-subtext {
+      font-size: 10px;
+      color: var(--color-muted);
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-8px); }
+    }
+
+    /* ── PROBLEM ── */
+    .problem__grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+      margin-top: 48px;
+    }
+
+    .problem-card {
+      display: flex;
+      gap: 16px;
+      padding: 28px;
+      background: var(--color-white);
+      border-radius: var(--radius);
+      border: 1px solid var(--color-border);
+      transition: all 0.3s ease;
+    }
+
+    .problem-card:hover {
+      border-color: #FECACA;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .problem-card__icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 10px;
+      background: #FEF2F2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .problem-card__icon svg {
+      width: 22px;
+      height: 22px;
+      color: #DC2626;
+    }
+
+    .problem-card__title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--color-black);
+      margin-bottom: 6px;
+    }
+
+    .problem-card__text {
+      font-size: 14px;
+      color: var(--color-muted);
+      line-height: 1.6;
+    }
+
+    /* ── SOLUTION ── */
+    .solution__content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: center;
+      margin-top: 48px;
+    }
+
+    .solution__list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .solution__item {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+
+    .solution__check {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #DCFCE7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .solution__check svg {
+      width: 14px;
+      height: 14px;
+      color: #16A34A;
+    }
+
+    .solution__item-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--color-black);
+      margin-bottom: 4px;
+    }
+
+    .solution__item-text {
+      font-size: 14px;
+      color: var(--color-muted);
+    }
+
+    .solution__visual {
+      background: linear-gradient(135deg, var(--color-primary-light) 0%, #E0F2FE 100%);
+      border-radius: var(--radius);
+      padding: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 400px;
+    }
+
+    .solution__visual-inner {
+      text-align: center;
+    }
+
+    .solution__visual-icon {
+      width: 80px;
+      height: 80px;
+      background: var(--color-primary);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      box-shadow: 0 8px 24px rgba(26,159,212,0.3);
+    }
+
+    .solution__visual-icon svg {
+      width: 40px;
+      height: 40px;
+      color: white;
+    }
+
+    .solution__visual-title {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--color-black);
+      margin-bottom: 8px;
+    }
+
+    .solution__visual-text {
+      font-size: 14px;
+      color: var(--color-muted);
+    }
+
+    /* ── FEATURES ── */
+    .features__grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      margin-top: 48px;
+    }
+
+    .feature-card {
+      background: var(--color-white);
+      border-radius: var(--radius);
+      padding: 32px 24px;
+      border: 1px solid var(--color-border);
+      transition: all 0.3s ease;
+      text-align: center;
+    }
+
+    .feature-card:hover {
+      border-color: var(--color-primary);
+      box-shadow: var(--shadow-md);
+      transform: translateY(-4px);
+    }
+
+    .feature-card__icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      background: var(--color-primary-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 18px;
+    }
+
+    .feature-card__icon svg {
+      width: 26px;
+      height: 26px;
+      color: var(--color-primary);
+    }
+
+    .feature-card__title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--color-black);
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+
+    .feature-card__text {
+      font-size: 13px;
+      color: var(--color-muted);
+      line-height: 1.6;
+    }
+
+    /* ── HOW IT WORKS ── */
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+      margin-top: 48px;
+      position: relative;
+    }
+
+    .steps::before {
+      content: '';
+      position: absolute;
+      top: 48px;
+      left: calc(16.66% + 48px);
+      right: calc(16.66% + 48px);
+      height: 2px;
+      background: var(--color-primary);
+      opacity: 0.2;
+    }
+
+    .step {
+      text-align: center;
+      position: relative;
+    }
+
+    .step__number {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: var(--color-primary);
+      color: white;
+      font-size: 24px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      position: relative;
+      z-index: 1;
+      box-shadow: 0 4px 16px rgba(26,159,212,0.3);
+    }
+
+    .step__title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--color-black);
+      margin-bottom: 8px;
+    }
+
+    .step__text {
+      font-size: 14px;
+      color: var(--color-muted);
+      line-height: 1.6;
+      max-width: 280px;
+      margin: 0 auto;
+    }
+
+    /* ── FOR WHO ── */
+    .audience__grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      margin-top: 48px;
+    }
+
+    .audience-card {
+      background: var(--color-white);
+      border-radius: var(--radius);
+      padding: 32px 24px;
+      text-align: center;
+      border: 1px solid var(--color-border);
+      transition: all 0.3s ease;
+    }
+
+    .audience-card:hover {
+      border-color: var(--color-primary);
+      box-shadow: var(--shadow-md);
+    }
+
+    .audience-card__icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--color-primary-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+    }
+
+    .audience-card__icon svg {
+      width: 26px;
+      height: 26px;
+      color: var(--color-primary);
+    }
+
+    .audience-card__title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--color-black);
+      margin-bottom: 6px;
+    }
+
+    .audience-card__text {
+      font-size: 13px;
+      color: var(--color-muted);
+      line-height: 1.5;
+    }
+
+    /* ── SOCIAL PROOF ── */
+    .proof__stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+      margin-top: 48px;
+    }
+
+    .proof-stat {
+      text-align: center;
+      padding: 40px 24px;
+      background: var(--color-white);
+      border-radius: var(--radius);
+      border: 1px solid var(--color-border);
+    }
+
+    .proof-stat__number {
+      font-size: 48px;
+      font-weight: 900;
+      color: var(--color-primary);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .proof-stat__label {
+      font-size: 15px;
+      color: var(--color-muted);
+      font-weight: 500;
+    }
+
+    .proof__testimonial {
+      margin-top: 48px;
+      background: var(--color-white);
+      border-radius: var(--radius);
+      padding: 48px;
+      border: 1px solid var(--color-border);
+      text-align: center;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .proof__testimonial-quote {
+      font-size: 20px;
+      font-style: italic;
+      color: var(--color-black);
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    .proof__testimonial-author {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--color-black);
+    }
+
+    .proof__testimonial-role {
+      font-size: 13px;
+      color: var(--color-muted);
+    }
+
+    /* ── PRICING ── */
+    .pricing__box {
+      max-width: 600px;
+      margin: 48px auto 0;
+      background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+      border-radius: var(--radius);
+      padding: 56px 48px;
+      text-align: center;
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .pricing__box::before {
+      content: '';
+      position: absolute;
+      top: -40px;
+      right: -40px;
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+    }
+
+    .pricing__title {
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    .pricing__text {
+      font-size: 16px;
+      opacity: 0.9;
+      margin-bottom: 32px;
+      line-height: 1.6;
+    }
+
+    .btn--white {
+      background: white;
+      color: var(--color-primary);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    }
+
+    .btn--white:hover {
+      background: var(--color-bg-alt);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 24px rgba(0,0,0,0.2);
+    }
+
+    /* ── FAQ ── */
+    .faq__list {
+      max-width: 720px;
+      margin: 48px auto 0;
+    }
+
+    .faq-item {
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .faq-item__question {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 24px 0;
+      background: none;
+      border: none;
+      cursor: pointer;
+      text-align: left;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--color-black);
+      font-family: inherit;
+      line-height: 1.4;
+    }
+
+    .faq-item__question:hover {
+      color: var(--color-primary);
+    }
+
+    .faq-item__icon {
+      width: 24px;
+      height: 24px;
+      flex-shrink: 0;
+      margin-left: 16px;
+      transition: transform 0.3s ease;
+    }
+
+    .faq-item.active .faq-item__icon {
+      transform: rotate(45deg);
+    }
+
+    .faq-item__answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s ease;
+    }
+
+    .faq-item__answer-inner {
+      padding-bottom: 24px;
+      font-size: 15px;
+      color: var(--color-muted);
+      line-height: 1.7;
+    }
+
+    /* ── CTA FINAL ── */
+    .cta-final {
+      padding: 96px 0;
+      background: linear-gradient(170deg, var(--color-bg-alt) 0%, var(--color-white) 100%);
+      text-align: center;
+    }
+
+    .cta-final__title {
+      font-size: clamp(28px, 4vw, 42px);
+      font-weight: 900;
+      color: var(--color-black);
+      margin-bottom: 16px;
+      line-height: 1.2;
+    }
+
+    .cta-final__subtitle {
+      font-size: 18px;
+      color: var(--color-muted);
+      margin-bottom: 36px;
+    }
+
+    .cta-final__note {
+      margin-top: 16px;
+      font-size: 14px;
+      color: var(--color-muted);
+    }
+
+    /* ── FOOTER ── */
+    .footer {
+      background: var(--color-black);
+      padding: 64px 0 32px;
+      color: rgba(255,255,255,0.6);
+    }
+
+    .footer__inner {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr;
+      gap: 48px;
+    }
+
+    .footer__brand-name {
+      font-size: 22px;
+      font-weight: 800;
+      color: white;
+      margin-bottom: 12px;
+    }
+
+    .footer__brand-name span {
+      color: var(--color-primary);
+    }
+
+    .footer__brand-tagline {
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .footer__col-title {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: rgba(255,255,255,0.9);
+      margin-bottom: 16px;
+    }
+
+    .footer__links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .footer__links a {
+      text-decoration: none;
+      color: rgba(255,255,255,0.5);
+      font-size: 14px;
+      transition: color 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .footer__links a:hover {
+      color: var(--color-primary);
+    }
+
+    .footer__links svg {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    .footer__bottom {
+      margin-top: 48px;
+      padding-top: 24px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+    }
+
+    /* ── WHATSAPP FLOAT ── */
+    .whatsapp-float {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      z-index: 999;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #25D366;
+      color: white;
+      padding: 14px 24px;
+      border-radius: 50px;
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 700;
+      box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
+      transition: all 0.3s ease;
+    }
+
+    .whatsapp-float:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 28px rgba(37, 211, 102, 0.5);
+    }
+
+    .whatsapp-float svg {
+      width: 22px;
+      height: 22px;
+    }
+
+    /* ── MOBILE ── */
+    @media (max-width: 1024px) {
+      .features__grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .audience__grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .section { padding: 64px 0; }
+
+      .navbar__links { display: none; }
+      .navbar__toggle { display: block; }
+
+      .navbar__links.open {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 72px;
+        left: 0;
+        right: 0;
+        background: white;
+        padding: 24px;
+        border-bottom: 1px solid var(--color-border);
+        box-shadow: var(--shadow-md);
+      }
+
+      .hero { padding-top: 120px; padding-bottom: 64px; }
+      .hero__grid { grid-template-columns: 1fr; gap: 40px; }
+      .hero__visual { order: -1; }
+
+      .problem__grid { grid-template-columns: 1fr; }
+
+      .solution__content { grid-template-columns: 1fr; }
+      .solution__visual { min-height: 300px; }
+
+      .features__grid { grid-template-columns: 1fr; }
+
+      .steps { grid-template-columns: 1fr; gap: 40px; }
+      .steps::before { display: none; }
+
+      .audience__grid { grid-template-columns: 1fr; }
+
+      .proof__stats { grid-template-columns: 1fr; }
+
+      .footer__inner { grid-template-columns: 1fr; gap: 32px; }
+      .footer__bottom { flex-direction: column; gap: 8px; text-align: center; }
+
+      .dashboard-mockup__pipeline { grid-template-columns: repeat(2, 1fr); }
+
+      .whatsapp-float span { display: none; }
+      .whatsapp-float { padding: 16px; border-radius: 50%; }
+    }
+
+    /* ── ANIMATIONS ── */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══════════ NAVBAR ═══════════ -->
+  <nav class="navbar" id="navbar">
+    <div class="container navbar__inner">
+      <a href="#" class="navbar__brand">
+        <div class="navbar__logo">G</div>
+        <div class="navbar__name">Giro<span>Vendas</span></div>
+      </a>
+      <ul class="navbar__links" id="navLinks">
+        <li><a href="#problema">Problema</a></li>
+        <li><a href="#funcionalidades">Funcionalidades</a></li>
+        <li><a href="#como-funciona">Como funciona</a></li>
+        <li><a href="#faq">FAQ</a></li>
+        <li>
+          <a href="https://wa.me/55NUMERO_GIRO_VENDAS" target="_blank" class="btn btn--primary navbar__cta">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+            Falar agora
+          </a>
+        </li>
+      </ul>
+      <button class="navbar__toggle" id="navToggle" aria-label="Menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ═══════════ HERO ═══════════ -->
+  <section class="hero" id="hero">
+    <div class="container">
+      <div class="hero__grid">
+        <div class="hero__content">
+          <div class="hero__badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            CRM Automotivo
+          </div>
+          <h1 class="hero__title">Seu lead chegou.<br><span>Seu vendedor ficou sabendo?</span></h1>
+          <p class="hero__subtitle">CRM automotivo 100% pronto para usar. Sem configuração, sem complicação. Seus leads organizados, seus vendedores notificados, sua operação no controle.</p>
+          <div class="hero__actions">
+            <a href="https://wa.me/55NUMERO_GIRO_VENDAS" target="_blank" class="btn btn--primary btn--large">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+              Quero conhecer o Giro Vendas
+            </a>
+          </div>
+          <div class="hero__proof">
+            <div class="hero__proof-avatars">
+              <div class="hero__proof-avatar">A</div>
+              <div class="hero__proof-avatar">M</div>
+              <div class="hero__proof-avatar">R</div>
+              <div class="hero__proof-avatar">J</div>
+            </div>
+            <div class="hero__proof-text">
+              Usado por <strong>lojistas em todo o Brasil</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero__visual">
+          <div class="dashboard-mockup">
+            <div class="dashboard-mockup__bar">
+              <div class="dashboard-mockup__dot dashboard-mockup__dot--red"></div>
+              <div class="dashboard-mockup__dot dashboard-mockup__dot--yellow"></div>
+              <div class="dashboard-mockup__dot dashboard-mockup__dot--green"></div>
+            </div>
+            <div class="dashboard-mockup__body">
+              <div class="dashboard-mockup__header">
+                <div class="dashboard-mockup__title">Pipeline de Leads</div>
+                <div class="dashboard-mockup__badge">Atualizado agora</div>
+              </div>
+              <div class="dashboard-mockup__pipeline">
+                <div class="pipeline-col">
+                  <div class="pipeline-col__title">Novos <span class="pipeline-col__count">3</span></div>
+                  <div class="pipeline-card">
+                    <div class="pipeline-card__name">Carlos M.</div>
+                    <div class="pipeline-card__vehicle">HB20 2023</div>
+                    <span class="pipeline-card__tag pipeline-card__tag--olx">OLX</span>
+                  </div>
+                  <div class="pipeline-card">
+                    <div class="pipeline-card__name">Ana S.</div>
+                    <div class="pipeline-card__vehicle">Onix Plus</div>
+                    <span class="pipeline-card__tag pipeline-card__tag--wm">Webmotors</span>
+                  </div>
+                </div>
+                <div class="pipeline-col">
+                  <div class="pipeline-col__title">Contato <span class="pipeline-col__count">2</span></div>
+                  <div class="pipeline-card">
+                    <div class="pipeline-card__name">Pedro L.</div>
+                    <div class="pipeline-card__vehicle">Civic 2022</div>
+                    <span class="pipeline-card__tag pipeline-card__tag--np">Na Pista</span>
+                  </div>
+                </div>
+                <div class="pipeline-col">
+                  <div class="pipeline-col__title">Proposta <span class="pipeline-col__count">2</span></div>
+                  <div class="pipeline-card">
+                    <div class="pipeline-card__name">Maria F.</div>
+                    <div class="pipeline-card__vehicle">T-Cross 2024</div>
+                    <span class="pipeline-card__tag pipeline-card__tag--site">Site</span>
+                  </div>
+                </div>
+                <div class="pipeline-col">
+                  <div class="pipeline-col__title">Fechado <span class="pipeline-col__count">1</span></div>
+                  <div class="pipeline-card">
+                    <div class="pipeline-card__name">João R.</div>
+                    <div class="pipeline-card__vehicle">Corolla 2023</div>
+                    <span class="pipeline-card__tag pipeline-card__tag--wm">Webmotors</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="hero__floating-badge hero__floating-badge--top">
+            <div class="hero__floating-icon hero__floating-icon--green">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div>
+              <div class="hero__floating-text">Lead distribuído</div>
+              <div class="hero__floating-subtext">Para: Consultor Lucas</div>
+            </div>
+          </div>
+
+          <div class="hero__floating-badge hero__floating-badge--bottom">
+            <div class="hero__floating-icon hero__floating-icon--blue">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+            </div>
+            <div>
+              <div class="hero__floating-text">Notificação enviada</div>
+              <div class="hero__floating-subtext">Via WhatsApp</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ PROBLEMA ═══════════ -->
+  <section class="section section--alt" id="problema">
+    <div class="container">
+      <div class="text-center">
+        <span class="section-label">O problema</span>
+        <h2 class="section-title">Quantos leads sua loja perdeu essa semana?</h2>
+        <p class="section-subtitle mx-auto">Se você não sabe a resposta, o problema é maior do que parece.</p>
+      </div>
+      <div class="problem__grid fade-up">
+        <div class="problem-card">
+          <div class="problem-card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          </div>
+          <div>
+            <h3 class="problem-card__title">Lead chega e ninguém atende a tempo</h3>
+            <p class="problem-card__text">O lead mandou mensagem, mas ficou horas sem resposta. Quando alguém viu, já comprou em outro lugar.</p>
+          </div>
+        </div>
+        <div class="problem-card">
+          <div class="problem-card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/><line x1="12" y1="2" x2="12" y2="2"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+          </div>
+          <div>
+            <h3 class="problem-card__title">Vendedor não sabe que tem lead novo</h3>
+            <p class="problem-card__text">O lead entrou no sistema, mas o consultor só descobre horas depois, quando alguém avisa manualmente.</p>
+          </div>
+        </div>
+        <div class="problem-card">
+          <div class="problem-card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 8h20"/><path d="M10 4v4"/></svg>
+          </div>
+          <div>
+            <h3 class="problem-card__title">Leads do Marketplace se perdem no e-mail</h3>
+            <p class="problem-card__text">OLX, Webmotors, Na Pista... os leads caem no e-mail e ninguém organiza. Metade nem recebe resposta.</p>
+          </div>
+        </div>
+        <div class="problem-card">
+          <div class="problem-card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+          </div>
+          <div>
+            <h3 class="problem-card__title">Zero visibilidade do funil comercial</h3>
+            <p class="problem-card__text">Você não sabe quem está atendendo o quê, quantos leads estão parados ou qual consultor converte mais.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ SOLUÇÃO ═══════════ -->
+  <section class="section" id="solucao">
+    <div class="container">
+      <span class="section-label">A solução</span>
+      <h2 class="section-title">Uma plataforma pronta. Você liga e já usa.</h2>
+      <p class="section-subtitle">O Giro Vendas foi feito para o lojista que quer resultado imediato, sem depender de TI ou configuração complexa.</p>
+
+      <div class="solution__content fade-up">
+        <ul class="solution__list">
+          <li class="solution__item">
+            <div class="solution__check">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div>
+              <div class="solution__item-title">Sem configuração complexa</div>
+              <p class="solution__item-text">A plataforma já vem pronta. Você cadastra a equipe e começa a usar no mesmo dia.</p>
+            </div>
+          </li>
+          <li class="solution__item">
+            <div class="solution__check">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div>
+              <div class="solution__item-title">Leads de todos os canais em um lugar só</div>
+              <p class="solution__item-text">Marketplace, site, redes sociais: tudo cai automaticamente no Giro Vendas.</p>
+            </div>
+          </li>
+          <li class="solution__item">
+            <div class="solution__check">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div>
+              <div class="solution__item-title">Distribuição automática para consultores</div>
+              <p class="solution__item-text">Cada lead vai para o consultor certo, com aviso no WhatsApp. Ninguém fica sem atender.</p>
+            </div>
+          </li>
+          <li class="solution__item">
+            <div class="solution__check">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div>
+              <div class="solution__item-title">Controle total da operação comercial</div>
+              <p class="solution__item-text">Pipeline visual, relatórios e métricas. Você sabe exatamente o que está acontecendo.</p>
+            </div>
+          </li>
+        </ul>
+
+        <div class="solution__visual">
+          <div class="solution__visual-inner">
+            <div class="solution__visual-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            </div>
+            <div class="solution__visual-title">100% pronto para usar</div>
+            <p class="solution__visual-text">Contrate hoje, use hoje.<br>Sem espera, sem implantação demorada.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ FUNCIONALIDADES ═══════════ -->
+  <section class="section section--alt" id="funcionalidades">
+    <div class="container">
+      <div class="text-center">
+        <span class="section-label">Funcionalidades</span>
+        <h2 class="section-title">Automações que trabalham por você</h2>
+        <p class="section-subtitle mx-auto">Cada funcionalidade foi pensada para resolver problemas reais do dia a dia da loja.</p>
+      </div>
+      <div class="features__grid fade-up">
+        <div class="feature-card">
+          <div class="feature-card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <h3 class="feature-card__title">Distribuição automática de leads</h3>
+          <p class="feature-card__text">Round robin inteligente entre consultores. Cada lead vai para o vendedor da vez.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+          </div>
+          <h3 class="feature-card__title">Aviso instantâneo no WhatsApp</h3>
+          <p class="feature-card__text">Lead novo? O consultor recebe na hora no WhatsApp. Sem atraso, sem e-mail perdido.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          </div>
+          <h3 class="feature-card__title">Integração com Marketplaces</h3>
+          <p class="feature-card__text">Webmotors, OLX, Na Pista e outros. Leads entram automaticamente no CRM.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/></svg>
+          </div>
+          <h3 class="feature-card__title">Pipeline visual de oportunidades</h3>
+          <p class="feature-card__text">Veja exatamente em que etapa cada lead está e quem é o consultor responsável.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          </div>
+          <h3 class="feature-card__title">Histórico completo por lead</h3>
+          <p class="feature-card__text">Todo o atendimento registrado. Você sabe exatamente o que foi dito e quando.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          </div>
+          <h3 class="feature-card__title">Relatórios de performance</h3>
+          <p class="feature-card__text">Saiba quem vende mais, quem responde mais rápido e onde estão os gargalos.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          </div>
+          <h3 class="feature-card__title">Follow-up automático</h3>
+          <p class="feature-card__text">Lead sem resposta? A régua de follow-up garante que nenhum contato esfrie.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <h3 class="feature-card__title">Lead direto no WhatsApp</h3>
+          <p class="feature-card__text">O lead cai direto no WhatsApp do vendedor responsável. Atendimento imediato.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ COMO FUNCIONA ═══════════ -->
+  <section class="section" id="como-funciona">
+    <div class="container">
+      <div class="text-center">
+        <span class="section-label">Como funciona</span>
+        <h2 class="section-title">3 passos para nunca mais perder lead</h2>
+        <p class="section-subtitle mx-auto">Simples assim. Sem complicação, sem treinamento demorado.</p>
+      </div>
+      <div class="steps fade-up">
+        <div class="step">
+          <div class="step__number">1</div>
+          <h3 class="step__title">Contrate e use no mesmo dia</h3>
+          <p class="step__text">A plataforma já vem configurada para sua loja. Cadastre a equipe e pronto.</p>
+        </div>
+        <div class="step">
+          <div class="step__number">2</div>
+          <h3 class="step__title">Leads entram automaticamente</h3>
+          <p class="step__text">Marketplace, site, redes sociais: todos os canais conectados ao Giro Vendas.</p>
+        </div>
+        <div class="step">
+          <div class="step__number">3</div>
+          <h3 class="step__title">Consultores recebem e atendem</h3>
+          <p class="step__text">Cada consultor recebe seus leads no WhatsApp e atende sem depender de você.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ PARA QUEM ═══════════ -->
+  <section class="section section--alt" id="para-quem">
+    <div class="container">
+      <div class="text-center">
+        <span class="section-label">Para quem</span>
+        <h2 class="section-title">Feito para quem vende carro de verdade</h2>
+        <p class="section-subtitle mx-auto">Se você tem loja, tem equipe e recebe leads, o Giro Vendas é para você.</p>
+      </div>
+      <div class="audience__grid fade-up">
+        <div class="audience-card">
+          <div class="audience-card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          </div>
+          <h3 class="audience-card__title">Dono de loja multimarca</h3>
+          <p class="audience-card__text">Organize sua operação e pare de depender da memória dos vendedores.</p>
+        </div>
+        <div class="audience-card">
+          <div class="audience-card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+          </div>
+          <h3 class="audience-card__title">Concessionária com equipe</h3>
+          <p class="audience-card__text">Distribua leads entre consultores de forma justa e com rastreabilidade total.</p>
+        </div>
+        <div class="audience-card">
+          <div class="audience-card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 8h20"/><path d="M10 4v4"/></svg>
+          </div>
+          <h3 class="audience-card__title">Loja com leads de Marketplace</h3>
+          <p class="audience-card__text">Centralize leads da OLX, Webmotors e Na Pista sem perder nenhum contato.</p>
+        </div>
+        <div class="audience-card">
+          <div class="audience-card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/></svg>
+          </div>
+          <h3 class="audience-card__title">Gestor comercial sem visibilidade</h3>
+          <p class="audience-card__text">Tenha controle do funil, saiba quem atende o quê e acompanhe a performance.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ PROVA SOCIAL ═══════════ -->
+  <section class="section" id="prova-social">
+    <div class="container">
+      <div class="text-center">
+        <span class="section-label">Resultados</span>
+        <h2 class="section-title">Números que provam</h2>
+        <p class="section-subtitle mx-auto">Lojistas que usam o Giro Vendas não voltam para a planilha.</p>
+      </div>
+      <div class="proof__stats fade-up">
+        <div class="proof-stat">
+          <div class="proof-stat__number">50+</div>
+          <div class="proof-stat__label">Lojas usando o Giro Vendas</div>
+        </div>
+        <div class="proof-stat">
+          <div class="proof-stat__number">10K+</div>
+          <div class="proof-stat__label">Leads processados por mês</div>
+        </div>
+        <div class="proof-stat">
+          <div class="proof-stat__number">3x</div>
+          <div class="proof-stat__label">Mais rápido no tempo de resposta</div>
+        </div>
+      </div>
+      <div class="proof__testimonial fade-up">
+        <p class="proof__testimonial-quote">"Antes eu perdia lead todo dia e nem sabia. Com o Giro Vendas, cada lead que chega já vai direto pro consultor certo. Minha equipe responde em minutos."</p>
+        <div class="proof__testimonial-author">Nome do Cliente</div>
+        <div class="proof__testimonial-role">Dono de loja multimarca — Cidade/UF</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ PREÇO ═══════════ -->
+  <section class="section section--alt" id="preco">
+    <div class="container">
+      <div class="text-center">
+        <span class="section-label">Investimento</span>
+        <h2 class="section-title">Planos feitos para o tamanho da sua operação</h2>
+        <p class="section-subtitle mx-auto">Sem surpresa na fatura. Plano sob consulta para caber na sua realidade.</p>
+      </div>
+      <div class="pricing__box fade-up">
+        <h3 class="pricing__title">Planos sob consulta</h3>
+        <p class="pricing__text">Conte quantos consultores você tem e de onde vêm seus leads. Montamos o plano ideal para você.</p>
+        <a href="https://wa.me/55NUMERO_GIRO_VENDAS?text=Ol%C3%A1%2C%20quero%20consultar%20os%20valores%20do%20Giro%20Vendas%20CRM" target="_blank" class="btn btn--white btn--large">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="24" height="24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+          Consultar valor
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ FAQ ═══════════ -->
+  <section class="section" id="faq">
+    <div class="container">
+      <div class="text-center">
+        <span class="section-label">Dúvidas frequentes</span>
+        <h2 class="section-title">Perguntas que todo lojista faz</h2>
+      </div>
+      <div class="faq__list fade-up">
+        <div class="faq-item">
+          <button class="faq-item__question">
+            O Giro Vendas já vem pronto ou preciso configurar tudo?
+            <svg class="faq-item__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </button>
+          <div class="faq-item__answer">
+            <div class="faq-item__answer-inner">Já vem 100% pronto. Você contrata, cadastra sua equipe e começa a usar no mesmo dia. Sem configuração técnica, sem dependência de TI.</div>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-item__question">
+            Funciona com Webmotors, OLX e Na Pista?
+            <svg class="faq-item__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </button>
+          <div class="faq-item__answer">
+            <div class="faq-item__answer-inner">Sim. Os leads desses marketplaces entram automaticamente no Giro Vendas e são distribuídos para os consultores. Também integramos com outros canais.</div>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-item__question">
+            Quantos consultores posso cadastrar?
+            <svg class="faq-item__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </button>
+          <div class="faq-item__answer">
+            <div class="faq-item__answer-inner">O número de consultores depende do plano contratado. Temos opções que se adaptam desde lojas pequenas até concessionárias com grandes equipes.</div>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-item__question">
+            Os leads chegam no WhatsApp do vendedor automaticamente?
+            <svg class="faq-item__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </button>
+          <div class="faq-item__answer">
+            <div class="faq-item__answer-inner">Sim. Quando um lead novo entra, o consultor responsável recebe uma notificação instantânea no WhatsApp com os dados do lead para atendimento imediato.</div>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-item__question">
+            Tem suporte para implantação?
+            <svg class="faq-item__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </button>
+          <div class="faq-item__answer">
+            <div class="faq-item__answer-inner">Sim. Acompanhamos todo o processo de início, do cadastro da equipe até a integração dos canais de lead. Você não fica sozinho em nenhum momento.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ CTA FINAL ═══════════ -->
+  <section class="cta-final" id="cta-final">
+    <div class="container">
+      <h2 class="cta-final__title">Chega de lead perdido.<br>Organize seu comercial hoje.</h2>
+      <p class="cta-final__subtitle">A primeira conversa é uma demonstração gratuita.</p>
+      <a href="https://wa.me/55NUMERO_GIRO_VENDAS?text=Ol%C3%A1%2C%20quero%20conhecer%20o%20Giro%20Vendas%20CRM" target="_blank" class="btn btn--primary btn--large">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+        Falar com o Giro Vendas
+      </a>
+      <p class="cta-final__note">Primeira conversa é demonstração gratuita.</p>
+    </div>
+  </section>
+
+  <!-- ═══════════ FOOTER ═══════════ -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__inner">
+        <div>
+          <div class="footer__brand-name">Giro<span>Vendas</span> CRM</div>
+          <p class="footer__brand-tagline">CRM automotivo feito para quem vende carro.</p>
+        </div>
+        <div>
+          <div class="footer__col-title">Navegação</div>
+          <ul class="footer__links">
+            <li><a href="#funcionalidades">Funcionalidades</a></li>
+            <li><a href="#como-funciona">Como funciona</a></li>
+            <li><a href="#para-quem">Para quem</a></li>
+            <li><a href="#faq">FAQ</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="footer__col-title">Contato</div>
+          <ul class="footer__links">
+            <li>
+              <a href="https://wa.me/55NUMERO_GIRO_VENDAS" target="_blank">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+                WhatsApp
+              </a>
+            </li>
+            <li>
+              <a href="https://instagram.com/girovendascrm" target="_blank">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                @girovendascrm
+              </a>
+            </li>
+            <li>
+              <a href="mailto:girovendascrm@gmail.com">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                girovendascrm@gmail.com
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <span>&copy; 2026 Giro Vendas CRM. Todos os direitos reservados.</span>
+        <span>CRM automotivo feito para quem vende carro.</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ═══════════ WHATSAPP FLUTUANTE ═══════════ -->
+  <a href="https://wa.me/55NUMERO_GIRO_VENDAS" target="_blank" class="whatsapp-float" aria-label="Falar agora no WhatsApp">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+    <span>Falar agora</span>
+  </a>
+
+  <script>
+    // Navbar scroll effect
+    window.addEventListener('scroll', function() {
+      document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 10);
+    });
+
+    // Mobile menu toggle
+    document.getElementById('navToggle').addEventListener('click', function() {
+      document.getElementById('navLinks').classList.toggle('open');
+    });
+
+    // Close mobile menu on link click
+    document.querySelectorAll('.navbar__links a').forEach(function(link) {
+      link.addEventListener('click', function() {
+        document.getElementById('navLinks').classList.remove('open');
+      });
+    });
+
+    // FAQ accordion
+    document.querySelectorAll('.faq-item__question').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var item = this.parentElement;
+        var answer = item.querySelector('.faq-item__answer');
+        var isActive = item.classList.contains('active');
+
+        // Close all
+        document.querySelectorAll('.faq-item').forEach(function(el) {
+          el.classList.remove('active');
+          el.querySelector('.faq-item__answer').style.maxHeight = null;
+        });
+
+        // Open clicked if wasn't active
+        if (!isActive) {
+          item.classList.add('active');
+          answer.style.maxHeight = answer.scrollHeight + 'px';
+        }
+      });
+    });
+
+    // Scroll animations
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.fade-up').forEach(function(el) {
+      observer.observe(el);
+    });
+  </script>
+
+</body>
+</html>
