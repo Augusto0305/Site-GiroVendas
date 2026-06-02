@@ -310,6 +310,11 @@ tbody tr:hover td{background:var(--bg3);}
 .client-card:hover .client-card-actions{opacity:1;}
 .client-name{font-size:16px;font-weight:700;margin-bottom:8px;line-height:1.3;}
 .client-valor{font-family:"Inter",sans-serif;font-size:26px;font-weight:700;margin-bottom:12px;color:var(--text);letter-spacing:-0.5px;}
+.client-valor-edit{display:inline-flex;align-items:center;gap:8px;cursor:pointer;border-radius:8px;padding:2px 8px;margin-left:-8px;transition:background var(--tr);position:relative;}
+.client-valor-edit:hover{background:var(--bg3);}
+.client-valor-edit .valor-edit-icon{width:14px;height:14px;color:var(--text3);opacity:0;transition:opacity var(--tr);}
+.client-valor-edit:hover .valor-edit-icon{opacity:1;}
+.valor-ajuste-badge{font-size:10px;font-weight:600;font-family:var(--font);letter-spacing:0;background:var(--amber-dim);color:var(--amber);padding:2px 7px;border-radius:5px;vertical-align:middle;}
 .client-meta{display:flex;align-items:center;justify-content:space-between;}
 .client-day{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text2);font-family:var(--mono);}
 .client-day svg{width:12px;height:12px;}
@@ -1703,11 +1708,12 @@ function createAutoMov(cli, k){
     var d=Math.min(cli.dia||5, lastDay);
     dataMov=isoDate(ky,km,d);
   }
+  var valorMov = (cli.valorMes && cli.valorMes[k] != null) ? cli.valorMes[k] : cli.valor;
   var mov={
     id: Date.now()+Math.floor(Math.random()*1000),
     tipo:'entrada',
     cat:'receita',
-    valor: cli.valor,
+    valor: valorMov,
     desc: 'Pagamento — '+cli.nome,
     obs:'',
     data: dataMov,
@@ -1746,6 +1752,54 @@ function clientePagouMesValor(clienteId, year, month){
   var k = monthKey(year, month);
   var mov = (S.movimentacoes||[]).find(function(m){return m.auto && m.clienteId===clienteId && m.monthKey===k;});
   return mov ? mov.valor : null;
+}
+
+// Valor EFETIVO de um cliente num mês específico.
+// Prioridade: (1) pagamento já registrado (congelado) > (2) ajuste do mês > (3) valor padrão.
+function clienteValorMes(c, year, month){
+  var k = monthKey(year, month);
+  // 1. Pagamento já feito = verdade histórica, nunca muda
+  var mov = (S.movimentacoes||[]).find(function(m){return m.auto && m.clienteId===c.id && m.monthKey===k;});
+  if(mov) return mov.valor;
+  // 2. Ajuste pontual daquele mês
+  if(c.valorMes && c.valorMes[k] != null) return c.valorMes[k];
+  // 3. Valor padrão do cliente
+  return c.valor;
+}
+
+// Converte texto em número aceitando formato brasileiro: "1.350,50" → 1350.50
+function parseBRNumber(s){
+  if(typeof s === 'number') return s;
+  if(s == null) return NaN;
+  s = String(s).trim().replace(/r\$/gi,'').replace(/\s/g,'');
+  if(s === '') return NaN;
+  if(s.indexOf(',') >= 0){ s = s.replace(/\./g,'').replace(',','.'); }
+  return parseFloat(s);
+}
+
+// Edita o valor de UM mês específico (não afeta os demais meses).
+function editValorMes(id){
+  var c = S.clientes.find(function(x){return x.id===id;}) || (S.inativos||[]).find(function(x){return x.id===id;});
+  if(!c) return;
+  var k = monthKey(S.cliYear, S.cliMonth);
+  var atual = clienteValorMes(c, S.cliYear, S.cliMonth);
+  var pago = !!(c.pagamentos && c.pagamentos[k]);
+  var label = 'Valor de "'+c.nome+'" em '+MONTHS[S.cliMonth]+'/'+S.cliYear+':';
+  if(pago) label += '\n(este mês já está marcado como pago — o valor recebido também será atualizado)';
+  var v = prompt(label, atual);
+  if(v === null) return;
+  var n = parseBRNumber(v);
+  if(isNaN(n) || n < 0){ toast('Valor inválido'); return; }
+  if(!c.valorMes) c.valorMes = {};
+  c.valorMes[k] = n;
+  // Se já pago, atualiza também a movimentação congelada daquele mês
+  var mov = (S.movimentacoes||[]).find(function(m){return m.auto && m.clienteId===id && m.monthKey===k;});
+  if(mov) mov.valor = n;
+  saveState();
+  renderClientes();
+  if(typeof renderDash==='function') renderDash();
+  if(typeof renderFinanceiro==='function') renderFinanceiro();
+  toast('Valor de '+MONTHS_SHORT[S.cliMonth]+'/'+S.cliYear+' ajustado: '+fmt(n),'green');
 }
 
 // Migração: cria entradas automáticas pra pagamentos de clientes que ainda não viraram movimentação
@@ -1828,14 +1882,13 @@ function renderClientes(){
   // Pagos = histórico real do mês (soma dos auto-movs, preservando o valor de cada pagamento)
   var pagos=pagosMesFromMovs(S.cliYear, S.cliMonth);
   var nPagos=S.clientes.filter(function(c){return c.pagamentos[k];}).length;
-  // Esperado para o mês = pagos (histórico) + não-pagos (estimativa atual)
+  // Esperado para o mês = valor efetivo de cada cliente naquele mês (ajuste pontual ou padrão)
   var expectedThisMonth = S.clientes.reduce(function(a,c){
-    var mv = clientePagouMesValor(c.id, S.cliYear, S.cliMonth);
-    return a + (mv !== null ? mv : c.valor);
+    return a + clienteValorMes(c, S.cliYear, S.cliMonth);
   }, 0);
   var pct=expectedThisMonth>0?Math.round(pagos/expectedThisMonth*100):0;
-  // A receber = soma dos não-pagos pelo valor atual
-  var aReceber=S.clientes.filter(function(c){return !c.pagamentos[k];}).reduce(function(a,c){return a+c.valor;},0);
+  // A receber = soma dos não-pagos pelo valor efetivo do mês
+  var aReceber=S.clientes.filter(function(c){return !c.pagamentos[k];}).reduce(function(a,c){return a+clienteValorMes(c, S.cliYear, S.cliMonth);},0);
   var svgUsers='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>';
   var svgCheck='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>';
   var svgPct='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>';
@@ -1853,13 +1906,9 @@ function renderClientes(){
     em.style.display='none';
     if(cardsEl)cardsEl.innerHTML=S.clientes.map(function(c){
       var pago=!!c.pagamentos[k];
-      // Se pago, mostra o valor HISTÓRICO daquele mês (preservado no auto-mov);
-      // se não pago, mostra o valor ATUAL (estimativa futura).
-      var displayValor = c.valor;
-      if(pago){
-        var mv = clientePagouMesValor(c.id, S.cliYear, S.cliMonth);
-        if(mv !== null) displayValor = mv;
-      }
+      // Valor efetivo do mês: congelado se pago, senão ajuste do mês, senão padrão.
+      var displayValor = clienteValorMes(c, S.cliYear, S.cliMonth);
+      var temAjuste = !pago && c.valorMes && c.valorMes[k] != null && c.valorMes[k] !== c.valor;
       var segColor=SEG_COLORS[c.seg]||'gray';
       var segIcon=SEG_ICONS[c.seg]||SEG_ICONS.outro;
       return'<div class="client-card '+(pago?'paid':'unpaid')+'">'+
@@ -1873,7 +1922,10 @@ function renderClientes(){
           '</div>'+
         '</div>'+
         '<div class="client-name">'+c.nome+'</div>'+
-        '<div class="client-valor">'+fmt(displayValor)+'</div>'+
+        '<div class="client-valor client-valor-edit" onclick="editValorMes('+c.id+')" title="Clique para ajustar o valor só deste mês">'+fmt(displayValor)+
+          (temAjuste?'<span class="valor-ajuste-badge" title="Valor ajustado para este mês (padrão: '+fmt(c.valor)+')">ajustado</span>':'')+
+          '<svg class="valor-edit-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>'+
+        '</div>'+
         '<div class="client-meta">'+
           '<div class="client-day"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Dia '+c.dia+'</div>'+
           '<div style="display:flex;align-items:center;gap:8px;">'+
@@ -2282,11 +2334,7 @@ function renderDash(){
   if(!S.clientes.length)ctb.innerHTML='<tr><td colspan="3" style="text-align:center;color:var(--text3);padding:24px;font-size:12px">Nenhum cliente ainda</td></tr>';
   else ctb.innerHTML=S.clientes.slice(0,6).map(function(c){
     var pago=!!c.pagamentos[k];
-    var displayValor = c.valor;
-    if(pago){
-      var mv = clientePagouMesValor(c.id, curY, curM);
-      if(mv !== null) displayValor = mv;
-    }
+    var displayValor = clienteValorMes(c, curY, curM);
     return'<tr><td style="font-weight:500">'+c.nome+'</td><td style="font-weight:600;font-size:14px">'+(fmt(displayValor))+'</td><td><span class="badge '+(pago?'green':'amber')+'"><span class="dot"></span>'+(pago?'Pago':'Pendente')+'</span></td></tr>';
   }).join('');
   var mtb=document.getElementById('dash-movs');var recent=S.movimentacoes.slice(0,6);
@@ -2299,7 +2347,7 @@ function setMetaPrompt(){
   var atual = S.metaFaturamento || 0;
   var v = prompt('Defina a meta de faturamento mensal (R$):', atual > 0 ? atual : '10000');
   if(v === null) return;
-  var n = parseFloat(v);
+  var n = parseBRNumber(v);
   if(isNaN(n) || n < 0){ toast('Valor inválido'); return; }
   S.metaFaturamento = n;
   saveState();
