@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-title" content="CHECK"/>
 <title>CHECK Company</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Hanken+Grotesk:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
 <style>
 :root{
   --bg:#0a0a0c;--bg2:#101013;--bg3:#16161a;--bg4:#1d1d22;--bg5:#26262d;
@@ -23,8 +23,8 @@
   --amber:#f59e0b;--amber-dim:rgba(245,158,11,0.13);
   --purple:#a855f7;--purple-dim:rgba(168,85,247,0.13);
   --teal:#14b8a6;--teal-dim:rgba(20,184,166,0.13);
-  --font:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
-  --display:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+  --font:'Hanken Grotesk',-apple-system,BlinkMacSystemFont,sans-serif;
+  --display:'Bricolage Grotesque','Hanken Grotesk',sans-serif;
   --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,monospace;
   --sidebar:248px;--tr:0.2s cubic-bezier(0.4,0,0.2,1);
   --radius:14px;--radius-sm:10px;--radius-xs:6px;
@@ -67,8 +67,8 @@
   box-shadow:0 12px 40px rgba(99,102,241,0.08),0 4px 12px rgba(15,15,18,0.04);
 }
 [data-theme="light"] .hero-card::before{
-  background:radial-gradient(circle,rgba(99,102,241,0.18) 0%,rgba(168,85,247,0.08) 40%,transparent 70%);
-  opacity:1;width:280px;height:280px;top:-50px;right:-50px;
+  background:radial-gradient(circle at 75% 25%,rgba(99,102,241,0.10) 0%,transparent 62%);
+  opacity:1;width:300px;height:300px;top:-60px;right:-60px;
 }
 [data-theme="light"] .hero-meta-bar{background:#e4e4e7;}
 [data-theme="light"] .alert-card{
@@ -135,7 +135,7 @@ input,select,textarea{font-family:var(--font);}
 .logo-wrap{display:flex;align-items:center;gap:10px;}
 .logo-icon{width:36px;height:36px;border-radius:var(--radius-xs);display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;}
 .logo-icon svg{width:20px;height:20px;stroke:#fff;}
-.logo-text{font-family:var(--font);font-size:20px;font-weight:700;color:var(--text);letter-spacing:-0.5px;line-height:1;}
+.logo-text{font-family:var(--display);font-size:21px;font-weight:800;color:var(--text);letter-spacing:-0.5px;line-height:1;}
 .logo-sub{font-size:11px;color:var(--text2);margin-top:4px;font-weight:500;}
 .sidebar-nav{flex:1;padding:16px 12px;overflow-y:auto;}
 .nav-group-label{font-size:11px;color:var(--text3);padding:0 10px;margin:16px 0 6px;font-weight:500;}
@@ -166,13 +166,36 @@ input,select,textarea{font-family:var(--font);}
 .topbar-date{font-size:12px;color:var(--text2);padding:7px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-xs);font-weight:500;}
 .content{padding:28px 32px;flex:1;}
 .section{display:none;}
-.section.active{display:block;animation:fadeIn 0.2s ease;}
+.section.active{display:block;}
 @keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+/* PAGE-LOAD ORQUESTRADO — entrada em cascata dos blocos de cada página */
+@keyframes riseIn{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+.section.active > *{animation:riseIn 0.55s cubic-bezier(0.2,0.85,0.25,1) backwards;}
+.section.active > *:nth-child(1){animation-delay:0.04s;}
+.section.active > *:nth-child(2){animation-delay:0.11s;}
+.section.active > *:nth-child(3){animation-delay:0.18s;}
+.section.active > *:nth-child(4){animation-delay:0.25s;}
+.section.active > *:nth-child(5){animation-delay:0.32s;}
+.section.active > *:nth-child(6){animation-delay:0.39s;}
+.section.active > *:nth-child(n+7){animation-delay:0.45s;}
+
+/* GRÃO — textura sutil que dá atmosfera/profundidade (anti "chapado") */
+.grain{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:0.045;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+[data-theme="light"] .grain{opacity:0.03;mix-blend-mode:multiply;}
+
+/* ACESSIBILIDADE — respeita quem desativa animações no SO */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:0.01ms !important;animation-iteration-count:1 !important;transition-duration:0.01ms !important;scroll-behavior:auto !important;}
+  .section.active > *{animation:none !important;}
+}
 
 /* PAGE HEADER */
 .page-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px;}
 .page-header-left{}
-.section-title{font-family:var(--font);font-size:28px;font-weight:700;letter-spacing:-0.6px;margin-bottom:4px;line-height:1.2;}
+.section-title{font-family:var(--display);font-size:30px;font-weight:700;letter-spacing:-0.8px;margin-bottom:4px;line-height:1.15;}
 .section-desc{font-size:14px;color:var(--text2);}
 
 /* METRIC CARDS — new style */
@@ -343,7 +366,7 @@ tbody tr:hover td{background:var(--bg3);}
 .pomo-ring-fill.short{stroke:var(--green);}
 .pomo-ring-fill.long{stroke:var(--blue);}
 .pomo-time{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
-.pomo-digits{font-family:var(--font);font-size:72px;font-weight:700;letter-spacing:-3px;line-height:1;font-variant-numeric:tabular-nums;}
+.pomo-digits{font-family:var(--display);font-size:74px;font-weight:700;letter-spacing:-3px;line-height:1;font-variant-numeric:tabular-nums;}
 .pomo-mode-label{font-family:var(--font);font-size:12px;color:var(--text2);margin-top:8px;font-weight:500;}
 .pomo-controls{display:flex;gap:12px;align-items:center;margin-bottom:20px;}
 .pomo-btn-main{width:60px;height:60px;border-radius:50%;border:2px solid var(--accent);background:var(--accent-dim);color:var(--accent);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all var(--tr);}
@@ -446,7 +469,7 @@ tbody tr:hover td{background:var(--bg3);}
 .hero-card::before{content:'';position:absolute;top:-40px;right:-40px;width:240px;height:240px;border-radius:50%;background:radial-gradient(circle,var(--accent-glow) 0%,transparent 70%);opacity:0.5;pointer-events:none;}
 .hero-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:32px;position:relative;z-index:1;align-items:center;}
 .hero-label{font-size:13px;color:var(--text2);margin-bottom:8px;font-weight:500;}
-.hero-value{font-size:48px;font-weight:700;letter-spacing:-1.5px;line-height:1.05;color:var(--text);font-variant-numeric:tabular-nums;}
+.hero-value{font-family:var(--display);font-size:52px;font-weight:700;letter-spacing:-2px;line-height:1.02;color:var(--text);font-variant-numeric:tabular-nums;}
 .hero-compare{display:flex;align-items:center;gap:6px;margin-top:10px;font-size:13px;font-weight:600;}
 .hero-compare.up{color:var(--green);}
 .hero-compare.down{color:var(--red);}
@@ -618,6 +641,8 @@ tbody tr:hover td{background:var(--bg3);}
 </style>
 </head>
 <body>
+
+<div class="grain"></div>
 
 <div class="sidebar-overlay" id="overlay" onclick="closeSidebar()"></div>
 
@@ -860,7 +885,7 @@ tbody tr:hover td{background:var(--bg3);}
             <div class="card-body">
               <div class="form-grid cols4">
                 <div class="field"><label>Nome</label><input type="text" id="cli-nome" placeholder="Ex: CM Automóveis"/></div>
-                <div class="field"><label>Valor/mês (R$)</label><input type="number" id="cli-valor" placeholder="0,00" min="0" step="0.01"/></div>
+                <div class="field"><label id="cli-valor-label">Valor/mês (R$)</label><input type="number" id="cli-valor" placeholder="0,00" min="0" step="0.01"/><div class="cofre-fld-hint" id="cli-valor-hint" style="display:none;margin-top:4px;color:var(--accent);"></div></div>
                 <div class="field"><label>Dia vencimento</label><input type="number" id="cli-dia" placeholder="Ex: 5" min="1" max="31"/></div>
                 <div class="field"><label>Segmento</label><select id="cli-seg"><option value="automotivo">Automotivo</option><option value="saude">Saúde</option><option value="odontologia">Odontologia</option><option value="varejo">Varejo</option><option value="b2b">B2B</option><option value="outro">Outro</option></select></div>
               </div>
@@ -1570,12 +1595,18 @@ function setClienteFormMode(mode){
   var titleEl=document.querySelector('#cli-form-wrap .card-title');
   var btnEl=document.querySelector('#cli-form-wrap button.btn.primary');
   if(!titleEl||!btnEl)return;
+  var lblEl=document.getElementById('cli-valor-label');
+  var hintEl=document.getElementById('cli-valor-hint');
   if(mode==='edit'){
     titleEl.textContent='Editar cliente';
     btnEl.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>Salvar alterações';
+    if(lblEl) lblEl.textContent='Valor em '+MONTHS[S.cliMonth]+'/'+S.cliYear+' (R$)';
+    if(hintEl){ hintEl.style.display='block'; hintEl.textContent='✓ Altera só este mês — os outros meses não mudam.'; }
   } else {
     titleEl.textContent='Novo cliente';
     btnEl.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Cadastrar cliente';
+    if(lblEl) lblEl.textContent='Valor/mês (R$)';
+    if(hintEl) hintEl.style.display='none';
   }
 }
 
@@ -1603,7 +1634,7 @@ function editCliente(id){
   if(S.cliTab !== 'ativos') showCliTab('ativos');
   editingClienteId=id;
   document.getElementById('cli-nome').value=cli.nome||'';
-  document.getElementById('cli-valor').value=cli.valor||'';
+  document.getElementById('cli-valor').value=clienteValorMes(cli, S.cliYear, S.cliMonth)||'';
   document.getElementById('cli-dia').value=cli.dia||'';
   document.getElementById('cli-seg').value=cli.seg||'automotivo';
   document.getElementById('cli-obs').value=cli.obs||'';
@@ -1630,11 +1661,17 @@ function saveClienteEdit(){
   var inicio=document.getElementById('cli-inicio').value;
   if(!nome||!valor){toast('Nome e valor são obrigatórios');return;}
   cli.nome=nome;
-  cli.valor=valor;
   cli.dia=dia;
   cli.seg=seg;
   cli.obs=obs;
   cli.inicio=inicio;
+  // VALOR é por MÊS: grava só no mês visualizado (não reescreve os outros meses).
+  var k = monthKey(S.cliYear, S.cliMonth);
+  if(!cli.valorMes) cli.valorMes = {};
+  cli.valorMes[k] = valor;
+  // Se este mês já está pago, atualiza também a movimentação congelada no Financeiro.
+  var movPago = (S.movimentacoes||[]).find(function(m){return m.auto && m.clienteId===cli.id && m.monthKey===k;});
+  if(movPago) movPago.valor = valor;
   saveState();
   editingClienteId=null;
   resetClienteForm();
@@ -1643,7 +1680,7 @@ function saveClienteEdit(){
   renderClientes();
   if(typeof renderDash==='function') renderDash();
   if(typeof renderFinanceiro==='function') renderFinanceiro();
-  toast('Cliente atualizado · '+nome,'green');
+  toast('Atualizado · '+nome+' em '+MONTHS_SHORT[S.cliMonth]+'/'+S.cliYear+': '+fmt(valor),'green');
 }
 
 function excluirCliente(id){
@@ -1708,7 +1745,7 @@ function createAutoMov(cli, k){
     var d=Math.min(cli.dia||5, lastDay);
     dataMov=isoDate(ky,km,d);
   }
-  var valorMov = (cli.valorMes && cli.valorMes[k] != null) ? cli.valorMes[k] : cli.valor;
+  var valorMov = clienteValorMes(cli, ky, km);
   var mov={
     id: Date.now()+Math.floor(Math.random()*1000),
     tipo:'entrada',
@@ -1761,9 +1798,18 @@ function clienteValorMes(c, year, month){
   // 1. Pagamento já feito = verdade histórica, nunca muda
   var mov = (S.movimentacoes||[]).find(function(m){return m.auto && m.clienteId===c.id && m.monthKey===k;});
   if(mov) return mov.valor;
-  // 2. Ajuste pontual daquele mês
+  // 2. Ajuste explícito daquele mês
   if(c.valorMes && c.valorMes[k] != null) return c.valorMes[k];
-  // 3. Valor padrão do cliente
+  // 3. Carry-forward: usa o ajuste explícito mais recente ANTES deste mês
+  //    (assim "a partir de junho passou a 2500" vale pra frente, sem mexer no passado)
+  if(c.valorMes){
+    for(var i=1;i<=48;i++){
+      var d=new Date(year, month-i, 1);
+      var kk=monthKey(d.getFullYear(), d.getMonth());
+      if(c.valorMes[kk] != null) return c.valorMes[kk];
+    }
+  }
+  // 4. Valor base do cliente (fallback)
   return c.valor;
 }
 
